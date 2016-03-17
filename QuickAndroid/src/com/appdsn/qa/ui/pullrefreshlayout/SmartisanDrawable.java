@@ -33,10 +33,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 
-/**
- * android-PullRefreshLayout
- * Created by baoyz on 15/9/20.
- */
+
 public class SmartisanDrawable extends Drawable implements Animatable
 {
 
@@ -97,11 +94,11 @@ public class SmartisanDrawable extends Drawable implements Animatable
         invalidateSelf();
     }
 
-    public void setColorSchemeColors(int[] colorSchemeColors)
+    public void setColor(int color)
     {
-        if (colorSchemeColors != null && colorSchemeColors.length > 0) {
-            mPaint.setColor(colorSchemeColors[0]);
-        }
+        
+         mPaint.setColor(color);
+        
     }
 
     @Override

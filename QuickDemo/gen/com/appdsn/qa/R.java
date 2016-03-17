@@ -18,6 +18,7 @@ public final class R {
 		public static final int civ_border_width = 0x7f01000a;
 		public static final int civ_fill_color = 0x7f01000d;
 		public static final int fillColor = 0x7f01000f;
+		public static final int isOverlay = 0x7f010016;
 		public static final int matProg_barColor = 0x7f010001;
 		public static final int matProg_barSpinCycleTime = 0x7f010005;
 		public static final int matProg_barWidth = 0x7f010008;
@@ -28,12 +29,9 @@ public final class R {
 		public static final int matProg_rimColor = 0x7f010002;
 		public static final int matProg_rimWidth = 0x7f010003;
 		public static final int matProg_spinSpeed = 0x7f010004;
-		public static final int overlay = 0x7f010016;
 		public static final int pageColor = 0x7f010010;
-		public static final int progress_colors = 0x7f010017;
 		public static final int radius = 0x7f010012;
-		public static final int refreshColor = 0x7f01001a;
-		public static final int refreshColors = 0x7f010019;
+		public static final int refreshColor = 0x7f010017;
 		public static final int refreshType = 0x7f010018;
 		public static final int snap = 0x7f010015;
 		public static final int spacing = 0x7f010014;
@@ -99,8 +97,9 @@ public final class R {
 		public static final int activity_base = 0x7f030000;
 		public static final int dialog_progress_wheel = 0x7f030002;
 		public static final int fragment_base = 0x7f030003;
-		public static final int layout_load_more_footer = 0x7f03000b;
-		public static final int layout_loading_failed = 0x7f03000c;
+		public static final int layout_banner_item = 0x7f03000a;
+		public static final int layout_load_more_footer = 0x7f03000c;
+		public static final int layout_loading_failed = 0x7f03000d;
 	}
 	public static final class menu {
 		public static final int main = 0x7f090000;
@@ -143,11 +142,9 @@ public final class R {
 		public static final int ProgressWheel_matProg_rimColor = 2;
 		public static final int ProgressWheel_matProg_rimWidth = 3;
 		public static final int ProgressWheel_matProg_spinSpeed = 4;
-		public static final int[] PullRefreshLayout = { 0x7f010016, 0x7f010017, 0x7f010018, 0x7f010019, 0x7f01001a };
-		public static final int PullRefreshLayout_overlay = 0;
-		public static final int PullRefreshLayout_progress_colors = 1;
-		public static final int PullRefreshLayout_refreshColor = 4;
-		public static final int PullRefreshLayout_refreshColors = 3;
+		public static final int[] PullRefreshLayout = { 0x7f010016, 0x7f010017, 0x7f010018 };
+		public static final int PullRefreshLayout_isOverlay = 0;
+		public static final int PullRefreshLayout_refreshColor = 1;
 		public static final int PullRefreshLayout_refreshType = 2;
 	}
 }

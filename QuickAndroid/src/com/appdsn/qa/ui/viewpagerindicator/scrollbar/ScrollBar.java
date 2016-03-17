@@ -6,16 +6,13 @@ public interface ScrollBar {
 	public static enum Gravity {
 		/** 顶部占位 */
 		TOP,
-		/** 顶部覆盖在Indicator�? */
-		TOP_FLOAT,
+		
 		/** 底部占位 */
 		BOTTOM,
-		/** 底部覆盖在Indicator�? */
-		BOTTOM_FLOAT,
+		
 		/** 中间覆盖在Indicator�? */
 		CENTENT,
-		/** 中间，被Indicator覆盖 */
-		CENTENT_FLOAT
+		
 	}
 
 	/**

@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2011 The Android Open Source Project
- * Copyright (C) 2011 Jake Wharton
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.appdsn.qa.ui.viewpagerindicator;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -27,21 +11,20 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.appdsn.qa.ui.viewpagerindicator.scrollbar.ScrollBar;
-/**
- * Created by wbz360 on 2016/01/11.
- */
+
 @SuppressLint("NewApi")
 public class ScrollPageIndicator extends HorizontalScrollView implements
 		PageIndicator {
 
 	private ViewPager mViewPager;
-	private OnPageChangeListener mListener;
+	private ViewPager.OnPageChangeListener mListener;
 	private int mSelectedTabIndex = -1;
 	final float density;
 	private IndicatorAdapter indicatorAdapter;
@@ -49,7 +32,7 @@ public class ScrollPageIndicator extends HorizontalScrollView implements
 	private int mPosition = 0;
 	private LinearLayout mTabLayout;
 	private Runnable mTabSelector;
-	
+
 	public ScrollPageIndicator(Context context) {
 		this(context, null);
 	}
@@ -57,9 +40,7 @@ public class ScrollPageIndicator extends HorizontalScrollView implements
 	public ScrollPageIndicator(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		setHorizontalScrollBarEnabled(false);
-		mTabLayout = new LinearLayout(context, attrs);
-		ColorDrawable colorDrawable = new ColorDrawable(Color.WHITE);
-		mTabLayout.setDividerDrawable(colorDrawable);
+		mTabLayout = new TabLayout(context);
 		addView(mTabLayout, new ViewGroup.LayoutParams(WRAP_CONTENT,
 				MATCH_PARENT));
 		density = context.getResources().getDisplayMetrics().density;
@@ -82,15 +63,15 @@ public class ScrollPageIndicator extends HorizontalScrollView implements
 		}
 		this.mPosition = position;
 		this.mPositionOffset = positionOffset;
-//		Log.i("123", "position-" + position);
-//		Log.i("123", "mPositionOffset-" + mPositionOffset);
+		Log.i("123", "position-" + position);
+		Log.i("123", "mPositionOffset-" + mPositionOffset);
 		changeTabView();
-		invalidate();
+		mTabLayout.invalidate();
 	}
 
 	@Override
 	public void onPageSelected(int arg0) {
-//		Log.i("123", "mPosition:" + arg0);
+		Log.i("123", "mPosition:" + arg0);
 		setCurrentTab(arg0);
 		if (mListener != null) {
 			mListener.onPageSelected(arg0);
@@ -103,7 +84,8 @@ public class ScrollPageIndicator extends HorizontalScrollView implements
 			View nextView;
 			if (mSelectedTabIndex != mPosition) {
 				nextView = mTabLayout.getChildAt(mPosition);
-				indicatorAdapter.onPageScrolled(nextView, mPosition, 1 - mPositionOffset);
+				indicatorAdapter.onPageScrolled(nextView, mPosition,
+						1 - mPositionOffset);
 				indicatorAdapter.onPageScrolled(curView, mSelectedTabIndex,
 						mPositionOffset);
 			} else {
@@ -113,7 +95,8 @@ public class ScrollPageIndicator extends HorizontalScrollView implements
 					return;
 				}
 				nextView = mTabLayout.getChildAt(mPosition + 1);
-				indicatorAdapter.onPageScrolled(nextView, mPosition + 1, mPositionOffset);
+				indicatorAdapter.onPageScrolled(nextView, mPosition + 1,
+						mPositionOffset);
 
 			}
 
@@ -175,13 +158,13 @@ public class ScrollPageIndicator extends HorizontalScrollView implements
 	}
 
 	@Override
-	public void setViewPager(ViewPager view, int initialPosition) {
+	public void setViewPager(ViewPager view, int initPosition) {
 
 		if (mViewPager == view) {
 			return;
 		}
 		if (mViewPager != null) {
-			mViewPager.setOnPageChangeListener(null);
+			mViewPager.addOnPageChangeListener(null);
 		}
 		final PagerAdapter adapter = view.getAdapter();
 		if (adapter == null) {
@@ -189,8 +172,8 @@ public class ScrollPageIndicator extends HorizontalScrollView implements
 					"ViewPager does not have adapter instance.");
 		}
 		mViewPager = view;
-		view.setOnPageChangeListener(this);
-		mSelectedTabIndex = initialPosition;
+		view.addOnPageChangeListener(this);
+		mSelectedTabIndex = initPosition;
 
 	}
 
@@ -216,9 +199,6 @@ public class ScrollPageIndicator extends HorizontalScrollView implements
 			}
 		}
 		mViewPager.setCurrentItem(mSelectedTabIndex, false);
-		if (mSelectedTabIndex==0){
-			setCurrentTab(0);
-		}
 		if (indicatorAdapter != null) {
 
 			indicatorAdapter.onPageScrolled(
@@ -267,78 +247,82 @@ public class ScrollPageIndicator extends HorizontalScrollView implements
 	/* ������scrollBar������÷��� */
 
 	private ScrollBar scrollBar;
-
 	private float mPositionOffset = 0;
-
-	private Canvas mCanvas;
 
 	public void setScrollBar(ScrollBar scrollBar) {
 		this.scrollBar = scrollBar;
 		invalidate();
 	}
 
-	@Override
-	protected void onDraw(Canvas canvas) {
-		// TODO Auto-generated method stub
-		super.onDraw(canvas);
-//		Log.i("123", "canvas:");
-		drawScrollBar(canvas);
-	}
+	class TabLayout extends LinearLayout {
 
-	private void drawScrollBar(Canvas canvas) {
-		if (mViewPager == null || scrollBar == null || count == 0) {
-//			Log.i("123", "return:");
-			return;
-		}
-		
-		View curView = mTabLayout.getChildAt(mPosition);
-		float offsetX = 0;
-		int curtabWidth = curView.getWidth();
-		int curtabHeight = curView.getHeight();
-		int curbarWidth = scrollBar.getWidth(curtabWidth);
-		int curbarHeight = scrollBar.getHeight(curtabHeight);
-		int curCenterX=curView.getLeft()+curtabWidth/2;
-		
-		View nextView=null;
-		int nextCenterX;
-		int nextWidth;
-		if (mPosition==count-1) {
-			nextCenterX=0;
-			nextWidth=0;
-		}else{
-			nextView = mTabLayout.getChildAt(mPosition+1);
-			nextCenterX=nextView.getLeft()+nextView.getWidth()/2;
-			nextWidth=nextView.getWidth();
-		}
-		
-		float barCenterX=curCenterX+(nextCenterX-curCenterX)*mPositionOffset;
-		float barWidth=curbarWidth+mPositionOffset*(nextWidth-curbarWidth);
-		
-		offsetX =barCenterX-barWidth/2;
-		
-		int offsetY = 0;
-		switch (scrollBar.getGravity()) {
-		case CENTENT_FLOAT:
-		case CENTENT:
-			offsetY = (curtabHeight - curbarHeight) / 2;
-			break;
-		case TOP:
-		case TOP_FLOAT:
-			offsetY = 0;
-			break;
-		case BOTTOM:
-		case BOTTOM_FLOAT:
-		default:
-			offsetY = curtabHeight - curbarHeight;
-			break;
+		public TabLayout(Context context) {
+			super(context);
+			ColorDrawable colorDrawable = new ColorDrawable(Color.WHITE);
+			setDividerDrawable(colorDrawable);
+			setBackgroundColor(Color.TRANSPARENT);
 		}
 
-		scrollBar.draw(canvas, offsetX, offsetY, offsetX + barWidth, offsetY
-				+ curbarHeight);
-	}
+		@Override
+		protected void onDraw(Canvas canvas) {
+			super.onDraw(canvas);
+			drawScrollBar(canvas);
+		}
 
-	public void setCurrentItem(int item) {
-		// TODO Auto-generated method stub
+		private void drawScrollBar(Canvas canvas) {
+			if (mViewPager == null || scrollBar == null || count == 0) {
+				// Log.i("123", "return:");
+				return;
+			}
+
+			View curView = mTabLayout.getChildAt(mPosition);
+			float offsetX = 0;
+			int curtabWidth = curView.getWidth();
+			int curtabHeight = curView.getHeight();
+			int curbarWidth = scrollBar.getWidth(curtabWidth);
+			int curbarHeight = scrollBar.getHeight(curtabHeight);
+			int curCenterX = curView.getLeft() + curtabWidth / 2;
+
+			View nextView = null;
+			int nextCenterX;
+			int nexttabWidth;
+			int nextbarWidth=0;
+			if (mPosition == count - 1) {
+				nextCenterX = 0;
+				nextbarWidth = 0;
+			} else {
+				nextView = mTabLayout.getChildAt(mPosition + 1);
+				nexttabWidth = nextView.getWidth();
+				nextbarWidth= scrollBar.getWidth(nexttabWidth);
+				nextCenterX = nextView.getLeft() + nexttabWidth / 2;
+			}
+
+			float barCenterX = curCenterX + (nextCenterX - curCenterX)
+					* mPositionOffset;
+			float barWidth = curbarWidth + mPositionOffset
+					* (nextbarWidth - curbarWidth);
+
+			offsetX = barCenterX - barWidth / 2;
+
+			int offsetY = 0;
+			switch (scrollBar.getGravity()) {
+			case CENTENT:
+				// offsetY = (curtabHeight - curbarHeight) / 2;不考虑padingTop
+				offsetY = curView.getTop() + (curtabHeight - curbarHeight) / 2;
+				break;
+			case TOP:
+				offsetY = curView.getTop();// offsetY =0,不考虑pading
+				break;
+			case BOTTOM:
+			default:
+				// offsetY = curtabHeight - curbarHeight;//不考虑pading
+				offsetY = curView.getBottom() - curbarHeight;
+				break;
+			}
+
+			scrollBar.draw(canvas, offsetX, offsetY, offsetX + barWidth,
+					offsetY + curbarHeight);
+		}
 
 	}
 

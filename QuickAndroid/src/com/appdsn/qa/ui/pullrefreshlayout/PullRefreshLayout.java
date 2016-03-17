@@ -31,81 +31,68 @@ import com.appdsn.qa.R;
 
 public class PullRefreshLayout extends ViewGroup {
 
-	public static final int STYLE_MATERIAL = 0;
-	public static final int STYLE_ARROW = 1;
-	public static final int STYLE_SMARTISAN = 2;
-	private static final int DEFAULT_REFRESH_DISTANCE = 64;// 默认拉动释放后可以刷新的距离
-	private static final int DEFAULT_HEADVIEW_HEIGHT = 45;// 默认头部显示view的高宽度
+	private static final int STYLE_MATERIAL = 0;
+	private static final int STYLE_ARROW = 1;
+	private static final int STYLE_SMARTISAN = 2;
+	private static final int DEFAULT_REFRESH_DISTANCE = 64;// dp,默认拉动释放后可以刷新的距离
+	private static final int DEFAULT_HEADVIEW_HEIGHT = 40;// dp,默认头部显示view的高宽度
+	private static final float offsetRadio = 2.5f;// 阻尼系数
 	// *************************************************************************
 	protected boolean isRefreshing = false;
-	protected float startRefreshDistance;// 头部下拉多少高度释放后会刷新，默认是该view的高度
-	protected FrameLayout mHeadViewLayout;
-	private boolean isOverlay = false;
-	private int[] mColorSchemeColors;
-	private BaseHeadView mHeadView;
-	private int mTouchSlop;
-	private float offsetRadio = 2.5f;// 阻尼系数
-	private View mContentView;
-	private float mCurrentOffset = 0;
-	private boolean mDispatchTargetTouchDown = false;
+	protected float startRefreshDistance = 0;// 头部下拉多少高度释放后会刷新，默认是64
+	protected FrameLayout mHeadViewLayout;// 头部布局
+	private BaseHeadView mHeadView;// 头部显示的view
+	private View mContentView;// 内容布局
+	private boolean isOverlay = false;// 下拉时头部是否覆盖在内容上
+	private int refreshColor;
+	private int refreshType;
 	private OnRefreshListener refreshListener;
+
+	private float mCurrentOffset = 0;// 当前下拉的距离
+	private boolean mDispatchTargetTouchDown = false;
 	private float xLast;
 	private float yLast;
+	private float xFirstPoint;
+	private float yFirstPoint;
 	private float xDistance;
 	private float yDistance;
 	private VelocityTracker vTracker = null;
 	private ObjectAnimator animAutoScroll;
-	private boolean isEnabled = true;// 刚开始可以拉动
+	private boolean isEnabled = true;// 刚开始是否可以拉动
 
 	public PullRefreshLayout(Context context) {
 		this(context, null);
 	}
 
+	/* 构造函数里初始化一些属性数据，此时view还没有被画出来，构造时view布局中的子view还没有被添加进来，getChildCount==0 */
 	public PullRefreshLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		init(context, attrs);
-	}
-
-	private void init(Context context, AttributeSet attrs) {
 		if (isInEditMode()) {
 			return;
 		}
-		mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 		TypedArray t = context.obtainStyledAttributes(attrs,
 				R.styleable.PullRefreshLayout);
-		/* 下面初始化属性值 */
-		isOverlay = t.getBoolean(R.styleable.PullRefreshLayout_overlay, false);// 下拉时头部是否覆盖在内容上
-		int type = t.getInteger(R.styleable.PullRefreshLayout_refreshType,
+		isOverlay = t
+				.getBoolean(R.styleable.PullRefreshLayout_isOverlay, false);
+		refreshColor = t.getColor(R.styleable.PullRefreshLayout_refreshColor,
+				Color.DKGRAY);
+		refreshType = t.getInteger(R.styleable.PullRefreshLayout_refreshType,
 				STYLE_ARROW);
-
-		/** attrs for circleprogressbar */
-		int colorsId = t.getResourceId(
-				R.styleable.PullRefreshLayout_progress_colors, 0);
-		if (colorsId > 0) {
-			mColorSchemeColors = context.getResources().getIntArray(colorsId);
-		} else {
-			mColorSchemeColors = new int[] { Color.rgb(0xC9, 0x34, 0x37),
-					Color.rgb(0x37, 0x5B, 0xF1), Color.rgb(0xF7, 0xD2, 0x3E),
-					Color.rgb(0x34, 0xA3, 0x50) };
-		}
-		setRefreshStyle(type);
 		t.recycle();
-
-		/* 下面初始化view，构造时view布局中的子view还没有被添加进来，getChildCount==0 */
-
 	}
 
 	public void setRefreshStyle(int type) {
 		switch (type) {
 		case STYLE_MATERIAL:
 			MaterialHeadView mHeadView = new MaterialHeadView(getContext());
-			mHeadView.setColorSchemeColors(mColorSchemeColors);
+			mHeadView.setColorSchemeColors(new int[] { refreshColor });
 			isOverlay = true;
 			setHeaderView(mHeadView);
 			break;
 
 		case STYLE_ARROW:
 			ArrowHeadView arrowHeadView = new ArrowHeadView(getContext());
+			arrowHeadView.setColor(refreshColor);
 			isOverlay = false;
 			setHeaderView(arrowHeadView);
 			break;
@@ -113,19 +100,67 @@ public class PullRefreshLayout extends ViewGroup {
 		case STYLE_SMARTISAN:
 			SmartisanHeadView smartisanHeadView = new SmartisanHeadView(
 					getContext());
+			smartisanHeadView.setColor(refreshColor);
 			isOverlay = false;
 			setHeaderView(smartisanHeadView);
 			break;
 		default:
 			throw new InvalidParameterException("Type does not exist");
 		}
+	}
 
+	public void setHeaderView(BaseHeadView headerView) {
+		if (headerView == null) {
+			return;
+		}
+		mHeadView = headerView;
+		post(new Runnable() {
+			@Override
+			public void run() {
+				startRefreshDistance = mHeadView.getStartRefreshDistance();
+				if (startRefreshDistance <= 0) {
+					startRefreshDistance = dip2px(DEFAULT_REFRESH_DISTANCE);
+				}
+				FrameLayout.LayoutParams layoutParams = mHeadView
+						.getFrameLayoutParams();
+				if (layoutParams == null) {
+					layoutParams = new FrameLayout.LayoutParams(
+							dip2px(DEFAULT_HEADVIEW_HEIGHT),
+							dip2px(DEFAULT_HEADVIEW_HEIGHT));
+					layoutParams.gravity = Gravity.CENTER;
+				}
+				mHeadViewLayout.removeAllViews();
+				mHeadViewLayout.addView((View) mHeadView, layoutParams);
+				mHeadViewLayout.getLayoutParams().height = 0;
+				ViewCompat.setTranslationY(mContentView, 0);
+				isRefreshing = false;
+			}
+		});
+	}
+
+	public void setIsOverLay(boolean isOverLay) {
+		this.isOverlay = isOverLay;
+	}
+
+	public void setRefreshDistance(float refreshDistance) {
+		this.startRefreshDistance = refreshDistance;
+	}
+
+	public void setHeadViewLayoutBackgroundColor(int color) {
+		mHeadViewLayout.setBackgroundColor(color);
+	}
+
+	public void setHeadViewLayoutBackgroundDrawable(int resId) {
+		mHeadViewLayout.setBackgroundResource(resId);
 	}
 
 	@Override
 	protected void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
 		// removeCallbacks(null);
+		if (vTracker != null) {
+			vTracker.clear();
+		}
 	}
 
 	/*
@@ -135,14 +170,14 @@ public class PullRefreshLayout extends ViewGroup {
 	protected void onAttachedToWindow() {
 		super.onAttachedToWindow();
 		Context context = getContext();
-		// 这里给头部添加一个FrameLayout，主要是为了扩展性考虑，后面可以自定义头部布局，以及头部布局的位置
+		// 这里给头部添加一个FrameLayout，主要是为了扩展性考虑，后面可以自定义头部view，以及头部view的位置
 		FrameLayout headViewLayout = new FrameLayout(context);
 		ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT, 0);
 		headViewLayout.setLayoutParams(layoutParams);
+		headViewLayout.setBackgroundColor(Color.TRANSPARENT);
 		mHeadViewLayout = headViewLayout;
-		mHeadViewLayout.setBackgroundColor(Color.TRANSPARENT);
-		addView(mHeadViewLayout);
+		addView(mHeadViewLayout);// 该view覆盖在mContentView上
 
 		int count = getChildCount();
 		if (count > 2) {
@@ -156,6 +191,10 @@ public class PullRefreshLayout extends ViewGroup {
 			}
 		}
 
+		if (mHeadView == null) {// 如果在代码里没有设置一个headerview，这里就初始化一个headview
+			setRefreshStyle(refreshType);
+		}
+
 	}
 
 	@Override
@@ -164,15 +203,16 @@ public class PullRefreshLayout extends ViewGroup {
 		if (mContentView == null) {
 			return;
 		}
-		mContentView.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth()
-				- getPaddingLeft() - getPaddingRight(), MeasureSpec.EXACTLY),
-				MeasureSpec.makeMeasureSpec(getMeasuredHeight()
-						- getPaddingTop() - getPaddingBottom(),
-						MeasureSpec.EXACTLY));
+
 		mHeadViewLayout.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth()
 				- getPaddingLeft() - getPaddingRight(), MeasureSpec.EXACTLY),
 				MeasureSpec.makeMeasureSpec(
 						mHeadViewLayout.getLayoutParams().height,
+						MeasureSpec.EXACTLY));
+		mContentView.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth()
+				- getPaddingLeft() - getPaddingRight(), MeasureSpec.EXACTLY),
+				MeasureSpec.makeMeasureSpec(getMeasuredHeight()
+						- getPaddingTop() - getPaddingBottom(),
 						MeasureSpec.EXACTLY));
 
 	}
@@ -182,22 +222,21 @@ public class PullRefreshLayout extends ViewGroup {
 		if (mContentView == null) {
 			return;
 		}
-		final View child = mContentView;
 		final int width = getMeasuredWidth();
 		final int height = getMeasuredHeight();
 		final int childLeft = getPaddingLeft();
 		final int childTop = getPaddingTop();
 		final int childWidth = width - getPaddingLeft() - getPaddingRight();
 		final int childHeight = height - getPaddingTop() - getPaddingBottom();
-		child.layout(childLeft, childTop, childLeft + childWidth, childTop
-				+ childHeight);
-
 		int headHeight = mHeadViewLayout.getMeasuredHeight();
+
 		mHeadViewLayout.layout(childLeft, childTop, childLeft + childWidth,
 				headHeight);
-
+		mContentView.layout(childLeft, childTop, childLeft + childWidth,
+				childTop + childHeight);
 	}
 
+	@SuppressLint("Recycle")
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
 		// Log.i("123", "onInterceptTouchEvent");
@@ -205,15 +244,16 @@ public class PullRefreshLayout extends ViewGroup {
 		case MotionEvent.ACTION_DOWN:
 			mDispatchTargetTouchDown = false;
 			xDistance = yDistance = 0f;
-			xLast = ev.getX();
-			yLast = ev.getY();
+			xFirstPoint = ev.getX();
+			yFirstPoint = ev.getY();
 			break;
 		case MotionEvent.ACTION_MOVE:
-			
 			if (mContentView == null) {
 				return false;
 			}
-			float deltaY = ev.getY() - yLast;
+			int mTouchSlop = ViewConfiguration.get(getContext())
+					.getScaledTouchSlop();
+			float deltaY = ev.getY() - yFirstPoint;
 			float absDiff = Math.abs(deltaY);// 取绝对值
 			if (absDiff < mTouchSlop) {
 				return false;
@@ -230,42 +270,14 @@ public class PullRefreshLayout extends ViewGroup {
 				mHeadView.onStart(this);
 			}
 			isEnabled = true;
-			xLast = ev.getX();
+			xLast = ev.getX();// 初始化位置，防止突然下拉一定距离
 			yLast = ev.getY();
 			return true;
 		}
 		return super.onInterceptTouchEvent(ev);
 	}
 
-	// @Override
-	// public boolean onInterceptTouchEvent(MotionEvent ev)
-	// {
-	// Log.i("123", "onInterceptTouchEvent");
-	// switch (ev.getAction()) {
-	// case MotionEvent.ACTION_DOWN:// 不截取事件，默认行为
-	// mTouchY = ev.getY();
-	// mDispatchTargetTouchDown = false;
-	// break;
-	// case MotionEvent.ACTION_MOVE:
-	// float currentY = ev.getY();
-	// float dy = currentY - mTouchY;
-	// Log.i("123", "isRefreshing" + isRefreshing);
-	// // 正在刷新包跨两种状态，一种是头部显示出来了，另一种是我们主动滑动给HeaderView挤上去了。针对这两个状态，判断条件不一样
-	// if (isRefreshing) {
-	// if (!canChildScrollUp() && Math.abs(dy) > mTouchSlop)
-	// {//只要不是该状态，其他状态都截断事件
-	// return true;
-	// }
-	// }
-	// else if (dy > mTouchSlop && !canChildScrollUp()) {//
-	// 如果是首次下拉，要判断两种状况:dy大于0表示下拉，再判断header是否可以刷新
-	// return true;
-	// }
-	//
-	// break;
-	// }
-	// return super.onInterceptTouchEvent(ev);
-	// }
+	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent e) {
 		// Log.i("123", "onTouchEvent-"+e.getAction());
@@ -278,11 +290,11 @@ public class PullRefreshLayout extends ViewGroup {
 			xDistance = Math.abs(curX - xLast);
 			yDistance = Math.abs(curY - yLast);
 			float dy = curY - yLast;
+			float offsetY = dy / offsetRadio;
 			xLast = curX;
 			yLast = curY;
-			float offsetY = dy / offsetRadio;
 			mCurrentOffset = mHeadViewLayout.getLayoutParams().height;
-			// Log.i("123","mCurrentOffset-"+mCurrentOffset);
+
 			if (!isEnabled) {
 				return true;// 如果在完成动画的过程中，拉动啥也不做
 			}
@@ -293,14 +305,20 @@ public class PullRefreshLayout extends ViewGroup {
 			}
 			/* 下面判断逻辑 */
 			// Log.i("123", "mCurrentOffset" + mCurrentOffset);
-			if (offsetY < 0 && mCurrentOffset == 0) {// 当位置在0且上拉
+			if (dy < 0 && mCurrentOffset == 0) {// 当位置在0且上拉
 				dispatchTouchEventToChild(e);
-			} else if (offsetY > 0 && canChildScrollUp()) {
+			} else if (dy > 0 && canChildScrollUp()) {
 				dispatchTouchEventToChild(e);
 			} else if (isOverlay && isRefreshing) {
 				dispatchTouchEventToChild(e);// 覆盖在上方的时候，当刷新时，头部不会挤上去，也不会下拉了
 			} else {
-				mCurrentOffset += offsetY;
+				double offsetY2 = Math.rint(offsetY);// 转换成整型数，因为height是整数，而TranslationY是float，两个数值要统一
+//				Log.i("123","offsetY1:"+ offsetY);
+//				Log.i("123","offsetY2:"+ offsetY2);
+				if (offsetY2 == 0) {
+					return true;
+				}
+				mCurrentOffset += offsetY2;
 				if (mCurrentOffset < 0) {// 这里很重要，不然快速滑动时mCurrentOffset不会等于0
 					mCurrentOffset = 0;
 				}
@@ -316,14 +334,13 @@ public class PullRefreshLayout extends ViewGroup {
 
 			return true;
 		case MotionEvent.ACTION_CANCEL:
-//			Log.i("123", "ACTION_CANCEL");
+			// Log.i("123", "ACTION_CANCEL");
 		case MotionEvent.ACTION_UP:
-//			Log.i("123", "ACTION_UP");
-			if (mDispatchTargetTouchDown) {
-				mContentView.dispatchTouchEvent(e);
-			}
 			vTracker.computeCurrentVelocity(1);// 微妙单位
 			// Log.i("123", "YVelocity1" + vTracker.getYVelocity());
+			if (mDispatchTargetTouchDown) {
+				dispatchTouchEventToChild(e);
+			}
 			if (mContentView != null) {
 				if (isOverlay) {
 					if (isRefreshing) {
@@ -372,17 +389,24 @@ public class PullRefreshLayout extends ViewGroup {
 		if (mDispatchTargetTouchDown) {
 			mContentView.dispatchTouchEvent(e);
 		} else {
+			// 两个事件同时，ACTION_DOWN是必须的，后面接着ACTION_MOVE，是为了防止触发按下的效果
 			MotionEvent obtain = MotionEvent.obtain(e);
 			obtain.setAction(MotionEvent.ACTION_DOWN);
-			mDispatchTargetTouchDown = true;
+			obtain.setLocation(xFirstPoint, yFirstPoint);
 			mContentView.dispatchTouchEvent(obtain);
+			obtain.recycle();
+			MotionEvent obtain2 = MotionEvent.obtain(e);
+			obtain2.setAction(MotionEvent.ACTION_MOVE);
+			mContentView.dispatchTouchEvent(obtain2);
+			obtain2.recycle();
+			mDispatchTargetTouchDown = true;
 		}
 
 	}
 
 	protected void pullHeaderLayout(float offsetY) {
 		mHeadViewLayout.getLayoutParams().height = (int) offsetY;
-		mHeadViewLayout.requestLayout();
+		mHeadViewLayout.requestLayout();// 必须要请求重新布局，包括布局子view
 		float percent = offsetY / startRefreshDistance;// 下拉高度的百分比
 		if (percent > 1) {
 			percent = 1;
@@ -394,6 +418,10 @@ public class PullRefreshLayout extends ViewGroup {
 
 	@SuppressLint("NewApi")
 	private void autoScrollView(float yVelocity) {
+		// Log.i("123", "yVelocity:" + yVelocity);
+		if (-1 < yVelocity && yVelocity < 1) {
+			return;
+		}
 
 		animAutoScroll = ObjectAnimator//
 				.ofFloat(mContentView, "tag", -yVelocity, 0)// yVelocity初始速度
@@ -582,51 +610,6 @@ public class PullRefreshLayout extends ViewGroup {
 		});
 		anim.start();
 
-	}
-
-	public void setHeaderView(final View headerView) {
-		mHeadView = (BaseHeadView) headerView;
-		post(new Runnable() {
-			@Override
-			public void run() {
-				startRefreshDistance = mHeadView.getStartRefreshDistance();
-				if (startRefreshDistance <= 0) {
-					startRefreshDistance = dip2px(DEFAULT_REFRESH_DISTANCE);
-				}
-				FrameLayout.LayoutParams layoutParams = mHeadView
-						.getFrameLayoutParams();
-				if (layoutParams == null) {
-					layoutParams = new FrameLayout.LayoutParams(
-							dip2px(DEFAULT_HEADVIEW_HEIGHT),
-							dip2px(DEFAULT_HEADVIEW_HEIGHT));
-					layoutParams.gravity = Gravity.CENTER;
-				}
-
-				mHeadViewLayout.removeAllViews();
-				mHeadViewLayout.addView(headerView, layoutParams);
-				mHeadViewLayout.getLayoutParams().height = 0;
-				ViewCompat.setTranslationY(mContentView, 0);
-				isRefreshing = false;
-//				Log.i("123", "removeAllViews");
-
-			}
-		});
-	}
-
-	public void setIsOverLay(boolean isOverLay) {
-		this.isOverlay = isOverLay;
-	}
-
-	public void setRefreshDistance(float refreshDistance) {
-		this.startRefreshDistance = refreshDistance;
-	}
-
-	public void setHeadViewLayoutBackgroundColor(int color) {
-		mHeadViewLayout.setBackgroundColor(color);
-	}
-
-	public void setHeadViewLayoutBackgroundDrawable(int resId) {
-		mHeadViewLayout.setBackgroundResource(resId);
 	}
 
 	/**

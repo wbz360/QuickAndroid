@@ -38,7 +38,7 @@
         <attr name="strokeWidth" format="dimension" />
         <attr name="spacing" format="dimension" />
         <!-- Orientation of the indicator. -->
-        
+
         <attr name="android:orientation" />
 
         <!-- Whether or not the selected indicator snaps to the circles. -->
@@ -47,19 +47,16 @@
         <!-- View background -->
         <attr name="android:background" />
     </declare-styleable>
-     <!-- PullRefreshLayout自定义的属性 -->
+
+    <!-- PullRefreshLayout自定义的属性 -->
     <declare-styleable name="PullRefreshLayout">
-        <attr name="overlay" format="boolean" />
-       
-        <!-- style for CircleProgressBar -->
-        <attr name="progress_colors" format="reference" />
+        <attr name="isOverlay" format="boolean" />
+        <attr name="refreshColor" format="color" />
         <attr name="refreshType" format="enum">
             <enum name="material" value="0" />
             <enum name="arrow" value="1" />
             <enum name="smartisan" value="2" />
         </attr>
-        <attr name="refreshColors" format="reference" />
-        <attr name="refreshColor" format="reference" />
     </declare-styleable>
 
 </resources>

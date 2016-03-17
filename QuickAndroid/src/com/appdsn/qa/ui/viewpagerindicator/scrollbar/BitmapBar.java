@@ -23,7 +23,6 @@ public class BitmapBar implements ScrollBar {
 	public BitmapBar(Context context, int drawableId, Gravity gravity) {
 		this.gravity = gravity;
 		bitmap = BitmapFactory.decodeResource(context.getResources(), drawableId);
-		
 	}
 	public BitmapBar(Context context, Bitmap bitmap) {
 		this(context, bitmap, Gravity.CENTENT);
@@ -60,7 +59,7 @@ public class BitmapBar implements ScrollBar {
 		if (width>tabWidth) {
 			return tabWidth;
 		}
-		return width;
+		return tabWidth;
 	}
 
 	@Override

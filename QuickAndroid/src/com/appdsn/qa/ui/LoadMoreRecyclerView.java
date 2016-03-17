@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -342,5 +343,5 @@ public class LoadMoreRecyclerView extends RecyclerView {
 		 */
 		void onLoad(LoadMoreRecyclerView listView);
 	}
-
+	
 }

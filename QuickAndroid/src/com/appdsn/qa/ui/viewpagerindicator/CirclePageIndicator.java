@@ -3,13 +3,12 @@ package com.appdsn.qa.ui.viewpagerindicator;
 import static android.graphics.Paint.ANTI_ALIAS_FLAG;
 import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewConfigurationCompat;
 import android.support.v4.view.ViewPager;
@@ -23,20 +22,18 @@ import com.appdsn.qa.ui.viewpagerindicator.scrollbar.ScrollBar;
 /**
  * Created by wbz360 on 2016/01/11.
  */
-public class CirclePageIndicator extends View implements PageIndicator {
+@SuppressLint("ClickableViewAccessibility") public class CirclePageIndicator extends View implements PageIndicator {
 	private static final int INVALID_POINTER = -1;
 
 	private float mRadius;
-	private float spacing;// ���
+	private float spacing;
 	private final Paint mPaintPageFill = new Paint(ANTI_ALIAS_FLAG);
 	private final Paint mPaintStroke = new Paint(ANTI_ALIAS_FLAG);
 	private final Paint mPaintFill = new Paint(ANTI_ALIAS_FLAG);
 	private ViewPager mViewPager;
 	private ViewPager.OnPageChangeListener mListener;
 	private int mCurrentPage;
-	private int mSnapPage;
 	private float mPageOffset;
-	private int mScrollState;
 	private int mOrientation;
 	private boolean mCentered;
 	private boolean mSnap;
@@ -179,6 +176,7 @@ public class CirclePageIndicator extends View implements PageIndicator {
 		return mSnap;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -378,14 +376,14 @@ public class CirclePageIndicator extends View implements PageIndicator {
 			return;
 		}
 		if (mViewPager != null) {
-			mViewPager.setOnPageChangeListener(null);
+			mViewPager.addOnPageChangeListener(null);
 		}
 		if (view.getAdapter() == null) {
 			throw new IllegalStateException(
 					"ViewPager does not have adapter instance.");
 		}
 		mViewPager = view;
-		mViewPager.setOnPageChangeListener(this);
+		mViewPager.addOnPageChangeListener(this);
 		invalidate();
 	}
 
@@ -412,8 +410,6 @@ public class CirclePageIndicator extends View implements PageIndicator {
 
 	@Override
 	public void onPageScrollStateChanged(int state) {
-		mScrollState = state;
-
 		if (mListener != null) {
 			mListener.onPageScrollStateChanged(state);
 		}
@@ -519,55 +515,6 @@ public class CirclePageIndicator extends View implements PageIndicator {
 			}
 		}
 		return result;
-	}
-
-	@Override
-	public void onRestoreInstanceState(Parcelable state) {
-		SavedState savedState = (SavedState) state;
-		super.onRestoreInstanceState(savedState.getSuperState());
-		mCurrentPage = savedState.currentPage;
-		mSnapPage = savedState.currentPage;
-		requestLayout();
-	}
-
-	@Override
-	public Parcelable onSaveInstanceState() {
-		Parcelable superState = super.onSaveInstanceState();
-		SavedState savedState = new SavedState(superState);
-		savedState.currentPage = mCurrentPage;
-		return savedState;
-	}
-
-	static class SavedState extends BaseSavedState {
-		int currentPage;
-
-		public SavedState(Parcelable superState) {
-			super(superState);
-		}
-
-		private SavedState(Parcel in) {
-			super(in);
-			currentPage = in.readInt();
-		}
-
-		@Override
-		public void writeToParcel(Parcel dest, int flags) {
-			super.writeToParcel(dest, flags);
-			dest.writeInt(currentPage);
-		}
-
-		@SuppressWarnings("UnusedDeclaration")
-		public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
-			@Override
-			public SavedState createFromParcel(Parcel in) {
-				return new SavedState(in);
-			}
-
-			@Override
-			public SavedState[] newArray(int size) {
-				return new SavedState[size];
-			}
-		};
 	}
 
 	@Override

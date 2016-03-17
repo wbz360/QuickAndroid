@@ -120,7 +120,7 @@ public class FixPageIndicator extends LinearLayout implements
 			return;
 		}
 		if (mViewPager != null) {
-			mViewPager.setOnPageChangeListener(null);
+			mViewPager.addOnPageChangeListener(null);
 		}
 		final PagerAdapter adapter = view.getAdapter();
 		if (adapter == null) {
@@ -128,7 +128,7 @@ public class FixPageIndicator extends LinearLayout implements
 					"ViewPager does not have adapter instance.");
 		}
 		mViewPager = view;
-		view.setOnPageChangeListener(this);
+		view.addOnPageChangeListener(this);
 		mSelectedTabIndex = initialPosition;
 	
 	}
@@ -215,9 +215,7 @@ public class FixPageIndicator extends LinearLayout implements
 
 	@Override
 	protected void onDraw(Canvas canvas) {
-		// TODO Auto-generated method stub
 		super.onDraw(canvas);
-//		Log.i("123", "canvas:");
 		drawScrollBar(canvas);
 	}
 	
@@ -233,18 +231,16 @@ public class FixPageIndicator extends LinearLayout implements
 		int tabHeight = currentView.getHeight();
 		int barWidth = scrollBar.getWidth(tabWidth);
 		int barHeight = scrollBar.getHeight(tabHeight);
+		
 		offsetX=currentView.getLeft()+(tabWidth - barWidth) / 2+ tabWidth * mPositionOffset;
 		switch (scrollBar.getGravity()) {
-		case CENTENT_FLOAT:
 		case CENTENT:
 			offsetY = currentView.getTop()+(tabHeight - barHeight) / 2;
 			break;
 		case TOP:
-		case TOP_FLOAT:
 			offsetY = currentView.getTop();
 			break;
 		case BOTTOM:
-		case BOTTOM_FLOAT:
 		default:
 			offsetY = currentView.getBottom()-barHeight;
 			break;

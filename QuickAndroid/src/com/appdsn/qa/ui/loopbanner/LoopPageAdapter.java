@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -14,17 +13,15 @@ import com.appdsn.qa.adapter.ViewHolder;
 public abstract class LoopPageAdapter<T> extends RecyclingPagerAdapter
 {
 	protected List<T> mDatas;
-	private boolean canLoop = true;
+	private boolean canLoop = true;//是否可以循环，默认是可以的
 	public boolean dataChange = false;
 	private final int MULTIPLE_COUNT = 300;// 也就是说最多翻页300倍的次数就会重置位置（此时会出现闪动一次，可能看不见）
 	private Context context;
 	private int resId;
-	private LayoutInflater mInflater;
 	private ViewPager viewPager;
 
 	public LoopPageAdapter(Context context, List<T> mDatas, int resId) {
 		this(context, mDatas, resId, true);
-		
 	}
 	public LoopPageAdapter(Context context, List<T> mDatas, int resId,boolean canLoop) {
 		super();
@@ -32,9 +29,6 @@ public abstract class LoopPageAdapter<T> extends RecyclingPagerAdapter
 		this.mDatas = mDatas;
 		this.canLoop = canLoop;
 		this.resId = resId;
-		this.mInflater = LayoutInflater.from(context);
-		
-		
 	}
 	public int toRealPosition(int position) {
 		int realCount = getRealCount();
@@ -69,23 +63,19 @@ public abstract class LoopPageAdapter<T> extends RecyclingPagerAdapter
 
 	public void setCanLoop(boolean canLoop) {
 		this.canLoop = canLoop;
-		notifyDataSetChanged();
 	}
 	
 	@Override
 	public void notifyDataSetChanged() {
 		// TODO Auto-generated method stub
-		dataChange = true;
-		super.notifyDataSetChanged();
-		viewPager.setCurrentItem(getFristItem(), false);//重置位置	
+//		dataChange = true;
+		super.notifyDataSetChanged();	
 	}
 
 	public boolean isCanLoop() {
 		return canLoop;
 	}
-	public void setViewPager(LoopViewPager viewPager) {
-		this.viewPager = viewPager;
-	}
+	
 	@Override
 	public void finishUpdate(ViewGroup container) {
 		if (viewPager==null) {

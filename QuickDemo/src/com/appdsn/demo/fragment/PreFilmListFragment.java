@@ -3,6 +3,7 @@ package com.appdsn.demo.fragment;
 import java.util.ArrayList;
 
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -97,6 +98,7 @@ public class PreFilmListFragment extends BaseFragment {
 		bannerDatas
 				.add("http://weixin-10007714.image.myqcloud.com/weixin56a8396bdf49d1453865323");
 
+		
 		loopBanner.setPageAdapter(new LoopPageAdapter<String>(mContext,
 				bannerDatas, R.layout.layout_main_banner_item) {
 
@@ -105,9 +107,18 @@ public class PreFilmListFragment extends BaseFragment {
 				// TODO Auto-generated method stub
 				ImageView imageView = (ImageView) holder.getConvertView();
 				ImageLoader.getInstance().displayImage(itemData, imageView);
-
+				imageView.setOnClickListener(new OnClickListener() {
+					
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						Toast.makeText(mContext, "onClickimageView",
+								Toast.LENGTH_SHORT).show();
+					}
+				});
 			}
 		});
+//		loopBanner.notifyDataSetChanged();
 	}
 
 	@Override

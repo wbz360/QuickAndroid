@@ -1,28 +1,24 @@
 package com.appdsn.qa.ui.viewpagerindicator.scrollbar;
 
-import android.R.integer;
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.view.View;
 
 public class ColorBar implements ScrollBar {
 	protected Gravity gravity;
-	protected View view;
 	protected int color;
 	protected int height;
 	protected int width;
 	private Paint paint;
 	private int radius;
 
-	public ColorBar(Context context, int color) {
-		this(context, color, Gravity.CENTENT,0,0);
+	public ColorBar(int color) {
+		this(color, Gravity.CENTENT,0,0);
 	}
-	public ColorBar(Context context, int color, Gravity gravity) {
-		this(context, color,gravity,0,0);
+	public ColorBar(int color, Gravity gravity) {
+		this(color,gravity,0,0);
 	}
-	public ColorBar(Context context, int color, Gravity gravity,int height,int radius) {
+	public ColorBar(int color, Gravity gravity,int height,int radius) {
 		this.color = color;
 		this.gravity = gravity;
 		this.height=height;
@@ -44,7 +40,7 @@ public class ColorBar implements ScrollBar {
 
 	public void setColor(int color) {
 		this.color = color;
-		view.setBackgroundColor(color);
+		paint.setColor(color);
 	}
 
 	public void setHeight(int height) {

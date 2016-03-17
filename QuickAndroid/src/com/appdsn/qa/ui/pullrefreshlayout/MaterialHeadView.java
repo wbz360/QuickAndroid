@@ -3,7 +3,6 @@ package com.appdsn.qa.ui.pullrefreshlayout;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Paint;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.support.v4.view.ViewCompat;
@@ -16,25 +15,10 @@ import android.widget.ImageView;
 
 public class MaterialHeadView extends ImageView implements BaseHeadView
 {
-    // Default background for the progress spinner
     private static final int CIRCLE_BG_LIGHT = 0xFFFAFAFA;
-    // Default offset in dips from the top of the view to where the progress spinner should stop
-    private static final int DEFAULT_CIRCLE_TARGET = 64;
-    private static final int CIRCLE_DIAMETER = 45;
-    private Paint mTextPaint;
-    private boolean mIfDrawText;
-    private int progressTextColor;
-    private int progressStokeWidth;
-    private boolean isShowArrow, isShowProgressBg;
-    private int progressValue, progressValueMax;
-    private int textType;
-    private int progressBg;
-    private int progressSize;
+    private static final int DEFAULT_REFRESH_DISTANCE = 64;
+    private static final int CIRCLE_DIAMETER = 40;
     private MaterialDrawable mProgressDrawable;
-    private int mTextSize;
-    private int mProgress = 0;
-    private int[] schemeColors;
-
     public MaterialHeadView(Context context)
     {
         this(context, null);
@@ -47,7 +31,7 @@ public class MaterialHeadView extends ImageView implements BaseHeadView
             return;
         }
         setWillNotDraw(false);
-        mProgressDrawable = new MaterialDrawable(getContext(), this);
+        mProgressDrawable = new MaterialDrawable(context, this);
         mProgressDrawable.setBackgroundColor(CIRCLE_BG_LIGHT);
         mProgressDrawable.showArrow(true);
         mProgressDrawable.setAlpha(255);
@@ -56,7 +40,6 @@ public class MaterialHeadView extends ImageView implements BaseHeadView
         ShapeDrawable mBgCircle = new ShapeDrawable(new OvalShape());
         mBgCircle.getPaint().setColor(CIRCLE_BG_LIGHT);
         setBackgroundDrawable(mBgCircle);
-
     }
 
     @Override
@@ -70,13 +53,13 @@ public class MaterialHeadView extends ImageView implements BaseHeadView
     public int getStartRefreshDistance()
     {
 
-        return dip2px(DEFAULT_CIRCLE_TARGET);
+        return dip2px(DEFAULT_REFRESH_DISTANCE);
     }
 
-    public void setProgressSize(int progressSize)
+    public void setCircleSize(int circleSize)
     {
-        getLayoutParams().width = dip2px(progressSize);
-        getLayoutParams().height = dip2px(progressSize);
+        getLayoutParams().width = dip2px(circleSize);
+        getLayoutParams().height = dip2px(circleSize);
     }
 
     public void setColorSchemeColors(int[] colors)
@@ -84,6 +67,7 @@ public class MaterialHeadView extends ImageView implements BaseHeadView
         mProgressDrawable.setColorSchemeColors(colors);
     }
 
+    /*drawable和view背景一致*/
     @Override
     public void setBackgroundColor(int color)
     {
@@ -106,14 +90,21 @@ public class MaterialHeadView extends ImageView implements BaseHeadView
     @Override
     public void onPull(PullRefreshLayout pullRefreshLayout, float fraction)
     {
+    	float alpha=fraction*255;
         if (mProgressDrawable != null) {
             mProgressDrawable.setProgressRotation(fraction);
-            mProgressDrawable.setStartEndTrim(0, (float) Math.min(0.8, fraction));
+            if (fraction<0.7) {
+            	 mProgressDrawable.setAlpha((int) alpha);
+			}else if(fraction==1){
+				 mProgressDrawable.setAlpha((int) alpha);
+			}
+//            mProgressDrawable.setStartEndTrim(0, (float) Math.min(0.8, fraction));
+            mProgressDrawable.setStartEndTrim((float)0.8, (float) Math.min(1.6, fraction+0.8));
             mProgressDrawable.setArrowScale(fraction);
         }
-        ViewCompat.setAlpha(this, fraction);
+//        ViewCompat.setAlpha(this, fraction);
+       
     }
-
 
     @Override
     public void onRefresh(PullRefreshLayout pullRefreshLayout)

@@ -1,7 +1,6 @@
 package com.appdsn.qa.ui.pullrefreshlayout;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.FrameLayout;
@@ -9,26 +8,10 @@ import android.widget.ImageView;
 
 public class SmartisanHeadView extends ImageView implements BaseHeadView
 {
-    private  Paint mTextPaint;
-    private  boolean mIfDrawText;
-    private int progressTextColor;
-
-    private int progressStokeWidth;
-    private boolean isShowArrow, isShowProgressBg;
-    private int progressValue, progressValueMax;
-    private int textType;
-    private int progressBg;
-    private int progressSize;
+   
     private SmartisanDrawable mProgressDrawable;
-    private int mTextSize;
-    private int mProgress=0;
-
-    // Default background for the progress spinner
-    private static final int CIRCLE_BG_LIGHT = 0xFFFAFAFA;
-    // Default offset in dips from the top of the view to where the progress spinner should stop
-    private static final int DEFAULT_CIRCLE_TARGET = 64;
-    private static final int CIRCLE_DIAMETER = 64;
-    private int[] schemeColors;
+    private static final int DEFAULT_REFRESH_DISTANCE = 64;
+    private static final int CIRCLE_DIAMETER = 40;
     public SmartisanHeadView(Context context)
     {
         this(context, null);
@@ -46,6 +29,11 @@ public class SmartisanHeadView extends ImageView implements BaseHeadView
 
     }
 
+    public void setColor(int color)
+    {
+        
+    	mProgressDrawable.setColor(color);
+    }
 
     @Override
     public  FrameLayout.LayoutParams getFrameLayoutParams(){
@@ -55,7 +43,7 @@ public class SmartisanHeadView extends ImageView implements BaseHeadView
     }
     public int getStartRefreshDistance(){
 
-        return  dip2px(DEFAULT_CIRCLE_TARGET);
+        return  dip2px(DEFAULT_REFRESH_DISTANCE);
     }
 
 

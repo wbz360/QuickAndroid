@@ -1,8 +1,6 @@
 package com.appdsn.qa.ui.pullrefreshlayout;
 
 import android.content.Context;
-import android.graphics.Paint;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.FrameLayout;
@@ -10,44 +8,33 @@ import android.widget.ImageView;
 
 public class ArrowHeadView extends ImageView implements BaseHeadView
 {
-    private  Paint mTextPaint;
-    private  boolean mIfDrawText;
-    private int progressTextColor;
-
-    private int progressStokeWidth;
-    private boolean isShowArrow, isShowProgressBg;
-    private int progressValue, progressValueMax;
-    private int textType;
-    private int progressBg;
-    private int progressSize;
+  
     private ArrowDrawable mProgressDrawable;
-    private int mTextSize;
-    private int mProgress=0;
-
-    // Default background for the progress spinner
-    private static final int CIRCLE_BG_LIGHT = 0xFFFAFAFA;
-    // Default offset in dips from the top of the view to where the progress spinner should stop
-    private static final int DEFAULT_CIRCLE_TARGET = 64;
+    private static final int DEFAULT_REFRESH_DISTANCE = 64;
     private static final int CIRCLE_DIAMETER = 40;
-    private int[] schemeColors;
+ 
     public ArrowHeadView(Context context)
     {
-        this(context, null);
+    	 super(context, null);
+         if (isInEditMode()) {
+             return;
+         }
+         setWillNotDraw(false);
+         mProgressDrawable = new ArrowDrawable(getContext());
+         super.setImageDrawable(mProgressDrawable);
     }
 
-    public ArrowHeadView(Context context, AttributeSet attrs)
-    {
-        super(context, attrs);
-        if (isInEditMode()) {
-            return;
-        }
-        setWillNotDraw(false);
-        mProgressDrawable = new ArrowDrawable(getContext());
-        super.setImageDrawable(mProgressDrawable);
+    public void setArrowColor(int color) {
+    	mProgressDrawable.setArrowColor(color);
+	}
 
-    }
-
-
+	public void setCircleColor(int color) {
+		mProgressDrawable.setCircleColor(color);
+	}
+	public void setColor(int color) {
+		mProgressDrawable.setArrowColor(color);
+		mProgressDrawable.setCircleColor(color);
+	}
     @Override
     public  FrameLayout.LayoutParams getFrameLayoutParams(){
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dip2px(CIRCLE_DIAMETER), dip2px( CIRCLE_DIAMETER));
@@ -56,7 +43,7 @@ public class ArrowHeadView extends ImageView implements BaseHeadView
     }
     public int getStartRefreshDistance(){
 
-        return  dip2px(DEFAULT_CIRCLE_TARGET);
+        return  dip2px(DEFAULT_REFRESH_DISTANCE);
     }
 
 

@@ -115,10 +115,8 @@ class MaterialDrawable extends Drawable implements Animatable {
     public MaterialDrawable(Context context, View parent) {
         mParent = parent;
         mResources = context.getResources();
-
         mRing = new Ring(mCallback);
         mRing.setColors(COLORS);
-
         updateSizes(DEFAULT);
         setupAnimators();
     }

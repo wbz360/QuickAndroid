@@ -70,7 +70,7 @@ public class FilmFragment extends BaseFragment {
 
 			}
 		});
-		ColorBar colorBar = new ColorBar(mContext, 0xffffffff);
+		ColorBar colorBar = new ColorBar(0xffffffff);
 		colorBar.setRadius(DimenUtils.dp2px(mContext, 5));
 		indicator.setScrollBar(colorBar);
 	}

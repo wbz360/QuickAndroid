@@ -6,6 +6,7 @@ int attr civ_border_overlay 0x7f01000c
 int attr civ_border_width 0x7f01000a
 int attr civ_fill_color 0x7f01000d
 int attr fillColor 0x7f01000f
+int attr isOverlay 0x7f010016
 int attr matProg_barColor 0x7f010001
 int attr matProg_barSpinCycleTime 0x7f010005
 int attr matProg_barWidth 0x7f010008
@@ -16,12 +17,9 @@ int attr matProg_progressIndeterminate 0x7f010000
 int attr matProg_rimColor 0x7f010002
 int attr matProg_rimWidth 0x7f010003
 int attr matProg_spinSpeed 0x7f010004
-int attr overlay 0x7f010016
 int attr pageColor 0x7f010010
-int attr progress_colors 0x7f010017
 int attr radius 0x7f010012
-int attr refreshColor 0x7f01001a
-int attr refreshColors 0x7f010019
+int attr refreshColor 0x7f010017
 int attr refreshType 0x7f010018
 int attr snap 0x7f010015
 int attr spacing 0x7f010014
@@ -77,8 +75,9 @@ int id tvTopBarTitle 0x7f0a0005
 int layout activity_base 0x7f030000
 int layout dialog_progress_wheel 0x7f030001
 int layout fragment_base 0x7f030002
-int layout layout_load_more_footer 0x7f030003
-int layout layout_loading_failed 0x7f030004
+int layout layout_banner_item 0x7f030003
+int layout layout_load_more_footer 0x7f030004
+int layout layout_loading_failed 0x7f030005
 int menu main 0x7f090000
 int string action_settings 0x7f070002
 int string app_name 0x7f070000
@@ -113,9 +112,7 @@ int styleable ProgressWheel_matProg_progressIndeterminate 0
 int styleable ProgressWheel_matProg_rimColor 2
 int styleable ProgressWheel_matProg_rimWidth 3
 int styleable ProgressWheel_matProg_spinSpeed 4
-int[] styleable PullRefreshLayout { 0x7f010016, 0x7f010017, 0x7f010018, 0x7f010019, 0x7f01001a }
-int styleable PullRefreshLayout_overlay 0
-int styleable PullRefreshLayout_progress_colors 1
-int styleable PullRefreshLayout_refreshColor 4
-int styleable PullRefreshLayout_refreshColors 3
+int[] styleable PullRefreshLayout { 0x7f010016, 0x7f010017, 0x7f010018 }
+int styleable PullRefreshLayout_isOverlay 0
+int styleable PullRefreshLayout_refreshColor 1
 int styleable PullRefreshLayout_refreshType 2

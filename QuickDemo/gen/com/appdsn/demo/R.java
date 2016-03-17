@@ -65,7 +65,7 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static final int customTypeface=0x7f01001b;
+        public static final int customTypeface=0x7f010019;
         /**  Color of the filled circle that represents the current page. 
          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
@@ -76,6 +76,14 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int fillColor=0x7f01000f;
+        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int isOverlay=0x7f010016;
         /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
 <p>This may also be a reference to a resource (in the form
@@ -164,14 +172,6 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int matProg_spinSpeed=0x7f010004;
-        /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
-<p>This may also be a reference to a resource (in the form
-"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
-theme attribute (in the form
-"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
-containing a value of this type.
-         */
-        public static final int overlay=0x7f010016;
         /**  Color of the filled circles that represents pages. 
          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
 "<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
@@ -182,11 +182,6 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int pageColor=0x7f010010;
-        /**  style for CircleProgressBar 
-         <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-         */
-        public static final int progress_colors=0x7f010017;
         /**  Width of the stroke used to draw the circles. 
  Radius of the circles. This is also the spacing between circles. 
          <p>Must be a dimension value, which is a floating point number appended with a unit such as "<code>14.5sp</code>".
@@ -199,14 +194,15 @@ theme attribute (in the form
 containing a value of this type.
          */
         public static final int radius=0x7f010012;
-        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+        /** <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
          */
-        public static final int refreshColor=0x7f01001a;
-        /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-         */
-        public static final int refreshColors=0x7f010019;
+        public static final int refreshColor=0x7f010017;
         /** <p>Must be one of the following constant values.</p>
 <table>
 <colgroup align="left" />
@@ -377,13 +373,14 @@ containing a value of this type.
         public static final int fragment_mine=0x7f030007;
         public static final int fragment_pre_film_list=0x7f030008;
         public static final int fragment_show_film_list=0x7f030009;
-        public static final int layout_find_header_view=0x7f03000a;
-        public static final int layout_load_more_footer=0x7f03000b;
-        public static final int layout_loading_failed=0x7f03000c;
-        public static final int layout_main_banner_item=0x7f03000d;
-        public static final int layout_main_film_tab_item=0x7f03000e;
-        public static final int layout_main_tab_item=0x7f03000f;
-        public static final int list_item_show_film_list=0x7f030010;
+        public static final int layout_banner_item=0x7f03000a;
+        public static final int layout_find_header_view=0x7f03000b;
+        public static final int layout_load_more_footer=0x7f03000c;
+        public static final int layout_loading_failed=0x7f03000d;
+        public static final int layout_main_banner_item=0x7f03000e;
+        public static final int layout_main_film_tab_item=0x7f03000f;
+        public static final int layout_main_tab_item=0x7f030010;
+        public static final int list_item_show_film_list=0x7f030011;
     }
     public static final class menu {
         public static final int main=0x7f090000;
@@ -720,7 +717,7 @@ containing a value of this type.
            @see #CustomTypefaceTextView_customTypeface
          */
         public static final int[] CustomTypefaceTextView = {
-            0x7f01001b
+            0x7f010019
         };
         /**
           <p>This symbol is the offset where the {@link com.appdsn.demo.R.attr#customTypeface}
@@ -923,24 +920,19 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
-           <tr><td><code>{@link #PullRefreshLayout_overlay com.appdsn.demo:overlay}</code></td><td></td></tr>
-           <tr><td><code>{@link #PullRefreshLayout_progress_colors com.appdsn.demo:progress_colors}</code></td><td> style for CircleProgressBar </td></tr>
+           <tr><td><code>{@link #PullRefreshLayout_isOverlay com.appdsn.demo:isOverlay}</code></td><td></td></tr>
            <tr><td><code>{@link #PullRefreshLayout_refreshColor com.appdsn.demo:refreshColor}</code></td><td></td></tr>
-           <tr><td><code>{@link #PullRefreshLayout_refreshColors com.appdsn.demo:refreshColors}</code></td><td></td></tr>
            <tr><td><code>{@link #PullRefreshLayout_refreshType com.appdsn.demo:refreshType}</code></td><td></td></tr>
            </table>
-           @see #PullRefreshLayout_overlay
-           @see #PullRefreshLayout_progress_colors
+           @see #PullRefreshLayout_isOverlay
            @see #PullRefreshLayout_refreshColor
-           @see #PullRefreshLayout_refreshColors
            @see #PullRefreshLayout_refreshType
          */
         public static final int[] PullRefreshLayout = {
-            0x7f010016, 0x7f010017, 0x7f010018, 0x7f010019,
-            0x7f01001a
+            0x7f010016, 0x7f010017, 0x7f010018
         };
         /**
-          <p>This symbol is the offset where the {@link com.appdsn.demo.R.attr#overlay}
+          <p>This symbol is the offset where the {@link com.appdsn.demo.R.attr#isOverlay}
           attribute's value can be found in the {@link #PullRefreshLayout} array.
 
 
@@ -950,41 +942,24 @@ containing a value of this type.
 theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
-          @attr name com.appdsn.demo:overlay
+          @attr name com.appdsn.demo:isOverlay
         */
-        public static final int PullRefreshLayout_overlay = 0;
-        /**
-          <p>
-          @attr description
-           style for CircleProgressBar 
-
-
-          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          <p>This is a private symbol.
-          @attr name com.appdsn.demo:progress_colors
-        */
-        public static final int PullRefreshLayout_progress_colors = 1;
+        public static final int PullRefreshLayout_isOverlay = 0;
         /**
           <p>This symbol is the offset where the {@link com.appdsn.demo.R.attr#refreshColor}
           attribute's value can be found in the {@link #PullRefreshLayout} array.
 
 
-          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
+          <p>Must be a color value, in the form of "<code>#<i>rgb</i></code>", "<code>#<i>argb</i></code>",
+"<code>#<i>rrggbb</i></code>", or "<code>#<i>aarrggbb</i></code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
           @attr name com.appdsn.demo:refreshColor
         */
-        public static final int PullRefreshLayout_refreshColor = 4;
-        /**
-          <p>This symbol is the offset where the {@link com.appdsn.demo.R.attr#refreshColors}
-          attribute's value can be found in the {@link #PullRefreshLayout} array.
-
-
-          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
-or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
-          @attr name com.appdsn.demo:refreshColors
-        */
-        public static final int PullRefreshLayout_refreshColors = 3;
+        public static final int PullRefreshLayout_refreshColor = 1;
         /**
           <p>This symbol is the offset where the {@link com.appdsn.demo.R.attr#refreshType}
           attribute's value can be found in the {@link #PullRefreshLayout} array.
