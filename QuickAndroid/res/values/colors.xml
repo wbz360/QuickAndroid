@@ -1,0 +1,18 @@
+<resources>
+
+    <!-- 所有页面用到的通用Colors -->
+    <color name="main_title_bg_color">#171717</color>
+    <color name="main_content_bg_color">#202020</color>
+    <color name="main_title_text_color">#b6b6b6</color>
+    <color name="main_content_text_color">#b6b6b6</color>
+    
+    <color name="normal_content_text_color">#b6b6b6</color>
+    <color name="normal_title_text_color">#b6b6b6</color>
+    <color name="light_content_text_color">#b6b6b6</color>
+    
+    <color name="list_item_bg_color">#393939</color>
+    <color name="list_border_bg_color">#565656</color>
+   
+    <!-- 单个模块用到的Colors,需要以模块名或者activity名作为前缀 -->
+	
+</resources>

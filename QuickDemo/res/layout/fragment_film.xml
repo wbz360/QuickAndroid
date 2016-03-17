@@ -1,0 +1,39 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" 
+        android:background="#FF4C55">
+
+        <com.appdsn.qa.ui.viewpagerindicator.FixPageIndicator
+            android:id="@+id/indicator"
+            android:layout_width="150dp"
+            android:layout_height="30dp"
+            
+            android:layout_centerInParent="true"
+            android:background="@drawable/main_bg_film_type_tab_shape" />
+
+        <ImageButton
+            android:id="@+id/btnToSearchFilm"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:onClick="doClick"
+            android:padding="12dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/main_ic_title_bar_search" />
+    </RelativeLayout>
+
+    <com.appdsn.qa.ui.HackyViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+       />
+
+</LinearLayout>

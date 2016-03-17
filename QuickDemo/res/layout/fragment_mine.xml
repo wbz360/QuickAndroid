@@ -1,0 +1,21 @@
+<LinearLayout 
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <com.appdsn.qa.ui.HackyViewPager
+        android:id="@+id/viewPager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:persistentDrawingCache="animation"/>
+
+    <com.appdsn.qa.ui.viewpagerindicator.FixPageIndicator 
+        android:id="@+id/indicator"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="#ffffff"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
+</LinearLayout>

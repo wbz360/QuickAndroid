@@ -1,0 +1,26 @@
+<resources>
+
+    <!-- 字体大小定义：下面是通用的，可根据该字体的用途來自定义 -->
+    <dimen name="font_size_tiny">10sp</dimen>
+    <dimen name="font_size_small">12sp</dimen>
+    <dimen name="font_size_normal">14sp</dimen>
+    <dimen name="font_size_normal_high">16sp</dimen>
+    <dimen name="font_size_large">18sp</dimen>
+    <dimen name="font_size_large_high">20sp</dimen>
+    <dimen name="font_size_xlarge">22sp</dimen>
+    
+    <dimen name="font_size_small_title">14sp</dimen>
+    <dimen name="font_size_normal_title">16sp</dimen>
+    <dimen name="font_size_large_title">18sp</dimen>
+    
+    <dimen name="font_size_small_text">12sp</dimen>
+    <dimen name="font_size_normal_text">14sp</dimen>
+    <dimen name="font_size_large_text">16sp</dimen>
+
+    <!-- 边距大小定义：下面是通用的，可根据该边距的用途來自定义 -->
+    <dimen name="offset_2dp">2dp</dimen>
+    <dimen name="offset_4dp">4dp</dimen>
+    <dimen name="offset_6dp">6dp</dimen>
+    <dimen name="offset_8dp">8dp</dimen>
+
+</resources>

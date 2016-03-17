@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp" >
+
+    <FrameLayout
+        android:id="@+id/layFilmCover"
+        android:layout_width="75dp"
+        android:layout_height="100dp"
+        android:background="#2d2d2d"
+        android:padding="2dp" >
+
+        <ImageView
+            android:id="@+id/imgFilmCover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxHeight="110dp"
+            android:maxWidth="85dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_film_cover" />
+
+        <View
+            android:id="@+id/serch_result_play"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_play_film_detail" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tvFilmName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="多多道之迷失宝藏"
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvFilmIndex"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="89"
+                android:textColor="#FF4C55"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="%好评率"
+                android:textColor="#FF4C55"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2月20上映|101家上映208场"
+            android:textColor="#9a9a9a"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tvFilmIntro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="“非常值得看的电影，棒棒的”"
+            android:textColor="#75CA00"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="100篇影评 | 50人晒票"
+                android:textColor="#FF4C55"
+                android:textSize="16sp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/main_bg_film_type_tab_shape"
+                android:padding="5dp"
+                android:text="比价购票"
+                android:focusable="false"
+                android:textColor="#ffffff"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
