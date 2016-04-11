@@ -14,7 +14,6 @@ import android.os.Build;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.support.v4.view.ViewPropertyAnimatorListener;
-import android.support.v4.view.ViewPropertyAnimatorListenerAdapter;
 import android.support.v4.view.ViewPropertyAnimatorUpdateListener;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -203,7 +202,7 @@ public class PullRefreshLayout extends ViewGroup {
 		if (mContentView == null) {
 			return;
 		}
-
+//		Log.i("123", "onMeasure");
 		mHeadViewLayout.measure(MeasureSpec.makeMeasureSpec(getMeasuredWidth()
 				- getPaddingLeft() - getPaddingRight(), MeasureSpec.EXACTLY),
 				MeasureSpec.makeMeasureSpec(
@@ -219,6 +218,7 @@ public class PullRefreshLayout extends ViewGroup {
 
 	@Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+//		Log.i("123", "onLayout");
 		if (mContentView == null) {
 			return;
 		}
@@ -350,13 +350,13 @@ public class PullRefreshLayout extends ViewGroup {
 					int height = mHeadViewLayout.getLayoutParams().height;
 					if (height > startRefreshDistance) {
 						setRefreshing();
-						translationHeaderLayout(startRefreshDistance,
+						transHeaderLayout(startRefreshDistance,
 								mHeadViewLayout, null);
 						// mHeadViewLayout.getLayoutParams().height = (int)
 						// startRefreshDistance;
 						// mHeadViewLayout.requestLayout();
 					} else if (height != 0) {
-						translationHeaderLayout(0, mHeadViewLayout, null);
+						transHeaderLayout(0, mHeadViewLayout, null);
 						// mHeadViewLayout.getLayoutParams().height = 0;
 						// mHeadViewLayout.requestLayout();
 					} else {
@@ -365,18 +365,19 @@ public class PullRefreshLayout extends ViewGroup {
 					}
 
 				} else {
-					float transY = ViewCompat.getTranslationY(mContentView);
-					if (transY >= startRefreshDistance) {
-						createAnimatorTranslationY(mContentView,
+					int height = mHeadViewLayout.getLayoutParams().height;
+					if (height >= startRefreshDistance) {
+						transHeaderContentLayout(mContentView,
 								startRefreshDistance, mHeadViewLayout, null);
 						setRefreshing();
-					} else if (transY != 0) {
-						createAnimatorTranslationY(mContentView, 0,
+					} else if (height != 0) {
+						transHeaderContentLayout(mContentView, 0,
 								mHeadViewLayout, null);
 					} else {
 						// 实现自动滑动效果
 						autoScrollView(vTracker.getYVelocity());
 					}
+	
 				}
 
 			}
@@ -472,10 +473,10 @@ public class PullRefreshLayout extends ViewGroup {
 						// mHeadViewLayout.getLayoutParams().height = (int)
 						// startRefreshDistance;
 						// mHeadViewLayout.requestLayout();
-						translationHeaderLayout(startRefreshDistance,
+						transHeaderLayout(startRefreshDistance,
 								mHeadViewLayout, null);
 					} else {
-						createAnimatorTranslationY(mContentView,
+						transHeaderContentLayout(mContentView,
 								startRefreshDistance, mHeadViewLayout, null);
 					}
 				}
@@ -500,15 +501,6 @@ public class PullRefreshLayout extends ViewGroup {
 	public void finishRefresh() {
 
 		if (mContentView != null && isRefreshing) {
-			// ViewPropertyAnimatorCompat viewPropertyAnimatorCompat =
-			// ViewCompat.animate(mContentView);
-			// viewPropertyAnimatorCompat.setDuration(200);
-			// viewPropertyAnimatorCompat.y(ViewCompat.getTranslationY(mContentView));
-			// viewPropertyAnimatorCompat.translationY(0);
-			// viewPropertyAnimatorCompat.setInterpolator(new
-			// DecelerateInterpolator());
-			// viewPropertyAnimatorCompat.start();
-
 			if (mHeadView != null) {
 				mHeadView.onComplete(this);
 			}
@@ -517,7 +509,7 @@ public class PullRefreshLayout extends ViewGroup {
 					@Override
 					public void run() {
 
-						translationHeaderLayout(0, mHeadViewLayout,
+						transHeaderLayout(0, mHeadViewLayout,
 								new AnimatorListenerAdapter() {
 									@Override
 									public void onAnimationEnd(
@@ -534,12 +526,12 @@ public class PullRefreshLayout extends ViewGroup {
 				postDelayed(new Runnable() {
 					@Override
 					public void run() {
-						createAnimatorTranslationY(mContentView, 0,
+						transHeaderContentLayout(mContentView, 0,
 								mHeadViewLayout,
-								new ViewPropertyAnimatorListenerAdapter() {
+								new AnimatorListenerAdapter() {
 									@Override
-									public void onAnimationEnd(View view) {
-										super.onAnimationEnd(view);
+									public void onAnimationEnd(Animator animation) {
+										super.onAnimationEnd(animation);
 										isRefreshing = false;
 										isEnabled = false;
 									}
@@ -552,6 +544,7 @@ public class PullRefreshLayout extends ViewGroup {
 
 	}
 
+	@Deprecated
 	public void createAnimatorTranslationY(final View v, final float h,
 			final FrameLayout fl, ViewPropertyAnimatorListener animatorListener) {
 
@@ -583,7 +576,39 @@ public class PullRefreshLayout extends ViewGroup {
 
 	}
 
-	public void translationHeaderLayout(final float h, final FrameLayout fl,
+	public void transHeaderContentLayout(final View v, final float h,
+			final FrameLayout fl, Animator.AnimatorListener animatorListener) {
+
+		ObjectAnimator anim = ObjectAnimator//
+				.ofFloat(fl, "tag", fl.getHeight(), h)//
+				.setDuration(200);//
+		if (animatorListener != null) {
+			anim.addListener(animatorListener);
+		}
+		anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+					@Override
+					public void onAnimationUpdate(ValueAnimator animation) {
+						float value = (Float) animation.getAnimatedValue();
+						int height=(int) value;
+						ViewCompat
+						.setTranslationY(mContentView, height);
+						fl.getLayoutParams().height = (int) height;
+						fl.requestLayout();
+
+						float percent = height / startRefreshDistance;// 下拉高度的百分比
+						if (percent > 1) {
+							percent = 1;
+						}
+						if (mHeadView != null && !isRefreshing) {// 不在刷新时才会调用（可以更具需要修改此处逻辑）
+							mHeadView.onPull(PullRefreshLayout.this, percent);
+						}
+					}
+				});
+		anim.start();
+
+	}
+	
+	public void transHeaderLayout(final float h, final FrameLayout fl,
 			Animator.AnimatorListener animatorListener) {
 
 		ObjectAnimator anim = ObjectAnimator//

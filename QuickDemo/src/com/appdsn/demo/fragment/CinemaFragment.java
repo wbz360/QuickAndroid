@@ -41,7 +41,7 @@ public class CinemaFragment extends BaseFragment{
 		// TODO Auto-generated method stub
 		viewPager = (HackyViewPager) view.findViewById(R.id.viewPager);
 		// viewPager.toggleLock();
-		viewPager.setOffscreenPageLimit(5);
+//		viewPager.setOffscreenPageLimit(5);
 		indicator = (ScrollPageIndicator) view.findViewById(R.id.indicator);
 	}
 
