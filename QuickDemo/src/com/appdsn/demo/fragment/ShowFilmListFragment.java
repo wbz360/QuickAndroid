@@ -2,13 +2,11 @@ package com.appdsn.demo.fragment;
 
 import java.util.ArrayList;
 
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import com.appdsn.demo.R;
 import com.appdsn.demo.adapter.FilmListAdapter;
@@ -81,6 +79,7 @@ public class ShowFilmListFragment extends BaseFragment {
 			}
 		});
 
+		refreshLayout.autoRefresh();
 		bannerDatas = new ArrayList<String>();
 		bannerDatas
 				.add("http://weixin-10007714.image.myqcloud.com/weixin56a84a6144c3e1453869665");
@@ -117,8 +116,9 @@ public class ShowFilmListFragment extends BaseFragment {
 //				.add("http://weixin-10007714.image.myqcloud.com/weixin56a83f937f7cb1453866899");
 //		bannerDatas
 //				.add("http://weixin-10007714.image.myqcloud.com/weixin56a8396bdf49d1453865323");
-				bannerDatas.remove(1);
-				loopBanner.notifyDataSetChanged();
+//				bannerDatas.remove(1);
+//				loopBanner.notifyDataSetChanged();
+				refreshLayout.autoRefresh();
 			
 			}
 		});

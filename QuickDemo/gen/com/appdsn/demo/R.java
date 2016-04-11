@@ -338,11 +338,11 @@ containing a value of this type.
         public static final int btnToSearchFilm=0x7f0a000d;
         public static final int customStatusBarView=0x7f0a0003;
         public static final int findBanner=0x7f0a0011;
-        public static final int imgFilmCover=0x7f0a0018;
+        public static final int imgFilmCover=0x7f0a0017;
         public static final int indicator=0x7f0a000c;
         public static final int layBody=0x7f0a0008;
         public static final int layClickReload=0x7f0a0014;
-        public static final int layFilmCover=0x7f0a0017;
+        public static final int layFilmCover=0x7f0a0018;
         public static final int layLoadingFailed=0x7f0a000a;
         public static final int layTopBar=0x7f0a0004;
         public static final int listFilm=0x7f0a0010;

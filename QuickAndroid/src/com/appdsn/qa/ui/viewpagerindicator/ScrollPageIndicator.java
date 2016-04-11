@@ -172,6 +172,7 @@ public class ScrollPageIndicator extends HorizontalScrollView implements
 					"ViewPager does not have adapter instance.");
 		}
 		mViewPager = view;
+		view.setOffscreenPageLimit(adapter.getCount()-1);
 		view.addOnPageChangeListener(this);
 		mSelectedTabIndex = initPosition;
 

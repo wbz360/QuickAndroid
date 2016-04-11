@@ -5,7 +5,7 @@
     app:refreshType="material"
     android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res/com.appdsn.demo">
 
-    <com.appdsn.qa.ui.LoadMoreRecyclerView 
+    <com.appdsn.qa.ui.xrecyclerview.LoadMoreRecyclerView 
         android:id="@+id/listFilm"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
